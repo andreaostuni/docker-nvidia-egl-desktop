@@ -275,8 +275,7 @@ Pin-Priority: -1" > /etc/apt/preferences.d/firefox-ppa && \
         pavucontrol-qt \
         transmission-qt && \
     apt-get install --install-recommends -y \
-        libreoffice \
-        libreoffice-style-breeze && \
+        terminator && \
     rm -rf /var/lib/apt/lists/* && \
     # Fix KDE startup permissions issues in containers
     cp -f /usr/lib/x86_64-linux-gnu/libexec/kf5/start_kdeinit /tmp/ && \
