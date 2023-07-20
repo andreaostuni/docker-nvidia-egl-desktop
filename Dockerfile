@@ -4,8 +4,8 @@
 
 # Ubuntu release versions 22.04, 20.04, and 18.04 are supported
 ARG UBUNTU_RELEASE=22.04
-ARG CUDA_VERSION=11.7.1
-FROM nvcr.io/nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu${UBUNTU_RELEASE}
+ARG CUDA_VERSION=11.8.0
+FROM nvcr.io/nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_RELEASE}
 
 LABEL maintainer "https://github.com/ehfd,https://github.com/danisla"
 
@@ -52,6 +52,21 @@ RUN apt-get clean && \
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
+
+# Add latest version of cmake
+RUN apt remove --purge --auto-remove cmake && \
+    apt update && \
+    apt install -y software-properties-common lsb-release && \
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
+    apt update && \
+    apt install kitware-archive-keyring && \
+    rm /etc/apt/trusted.gpg.d/kitware.gpg && \
+    apt update && \
+    apt install cmake
+
+# Add universe repo
+RUN add-apt-repository universe
 
 # Install Xvfb and other important libraries or packages
 RUN dpkg --add-architecture i386 && \
@@ -133,6 +148,7 @@ RUN dpkg --add-architecture i386 && \
         xserver-xorg-input-all \
         xserver-xorg-video-all \
         mesa-vulkan-drivers \
+        libpcl-dev \
         libvulkan-dev \
         libvulkan-dev:i386 \
         libxau6 \
@@ -175,6 +191,10 @@ RUN dpkg --add-architecture i386 && \
         \"library_path\": \"libEGL_nvidia.so.0\"\n\
     }\n\
 }" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+
+# Add ROS 2 GPG key
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # Configure Vulkan manually
 RUN VULKAN_API_VERSION=$(dpkg -s libvulkan1 | grep -oP 'Version: [0-9|\.]+' | grep -oP '[0-9]+(\.[0-9]+)(\.[0-9]+)') && \
@@ -309,6 +329,18 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         python3-gi \
         python3-setuptools \
         python3-wheel \
+        python3-flake8-docstrings \
+        python3-pytest-cov \
+        ros-dev-tools \
+        python3-flake8-blind-except \
+        python3-flake8-builtins \
+        python3-flake8-class-newline \
+        python3-flake8-comprehensions \
+        python3-flake8-deprecated \
+        python3-flake8-import-order \
+        python3-flake8-quotes \
+        python3-pytest-repeat \
+        python3-pytest-rerunfailures \
         tzdata \
         sudo \
         udev \
