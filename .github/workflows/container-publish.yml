@@ -37,7 +37,7 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         build-args: |
-          CUDNN=''
+          CUDNN=
           UBUNTU_RELEASE=22.04
         context: .
         push: ${{ github.event_name != 'pull_request' }}
@@ -69,10 +69,9 @@ jobs:
       with:
         build-args: |
           UBUNTU_RELEASE=22.04
-          CUDNN='-cudnn8'
+          CUDNN=-cudnn8
         context: .
         push: ${{ github.event_name != 'pull_request' }}
         tags: |
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:22.04
+          ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:cudnn_22.04
         labels: ${{ steps.meta.outputs.labels }}
