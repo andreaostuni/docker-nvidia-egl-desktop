@@ -61,10 +61,10 @@ RUN apt update && \
     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
     apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
     apt update && \
-    apt install kitware-archive-keyring && \
+    apt install -y kitware-archive-keyring && \
     rm /etc/apt/trusted.gpg.d/kitware.gpg && \
     apt update && \
-    apt install cmake
+    apt install -y cmake
 
 # Add universe repo
 RUN add-apt-repository universe
