@@ -54,8 +54,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 # Add latest version of cmake
-RUN apt remove --purge --auto-remove cmake && \
-    apt update && \
+RUN apt update && \
     apt install -y software-properties-common lsb-release && \
     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
     apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
