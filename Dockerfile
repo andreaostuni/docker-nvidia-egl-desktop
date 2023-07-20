@@ -61,6 +61,7 @@ RUN apt update && \
     apt update && \
     apt install kitware-archive-keyring && \
     rm /etc/apt/trusted.gpg.d/kitware.gpg && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 42D5A192B819C5DA &&\
     apt update && \
     apt install cmake
 
