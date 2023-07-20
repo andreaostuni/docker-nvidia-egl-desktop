@@ -5,7 +5,8 @@
 # Ubuntu release versions 22.04, 20.04, and 18.04 are supported
 ARG UBUNTU_RELEASE=22.04
 ARG CUDA_VERSION=11.8.0
-FROM nvcr.io/nvidia/cuda:${CUDA_VERSION}-devel-ubuntu${UBUNTU_RELEASE}
+ARG CUDNN=-cudnn8
+FROM nvcr.io/nvidia/cuda:${CUDA_VERSION}${CUDNN}-devel-ubuntu${UBUNTU_RELEASE}
 
 LABEL maintainer "https://github.com/ehfd,https://github.com/danisla"
 
