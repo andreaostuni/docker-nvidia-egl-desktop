@@ -56,12 +56,12 @@ ENV LC_ALL en_US.UTF-8
 # Add latest version of cmake
 RUN apt update && \
     apt install -y software-properties-common lsb-release && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6494C6D6997C215E
     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
     apt-add-repository "deb https://apt.kitware.com/ubuntu/ $(lsb_release -cs) main" && \
     apt update && \
     apt install kitware-archive-keyring && \
     rm /etc/apt/trusted.gpg.d/kitware.gpg && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 42D5A192B819C5DA &&\
     apt update && \
     apt install cmake
 
